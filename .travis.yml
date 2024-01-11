@@ -18,3 +18,10 @@ after_success:
   - docker build -t jsheikh/multi-nginx ./nginx
   - docker build -t jsheikh/multi-server ./server
   - docker build -t jsheikh/multi-worker ./worker
+  # Log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push images to docker hub
+  - docker push jsheikh/multi-client
+  - docker push jsheikh/multi-nginx
+  - docker push jsheikh/multi-server
+  - docker push jsheikh/multi-worker
