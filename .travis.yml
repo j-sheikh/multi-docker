@@ -1,26 +1,23 @@
 sudo: required
 language: generic
+
 services:
   - docker
 
-#test version
 before_install:
   - docker build -t jsheikh/react-test -f ./client/Dockerfile.dev ./client
-  #docker build myotherprohects
-#primary test running section
+
 script:
   - docker run -e CI=true jsheikh/react-test npm test
-  #docker run myotherprohects
 
-#production version images
 after_success:
   - docker build -t jsheikh/multi-client ./client
   - docker build -t jsheikh/multi-nginx ./nginx
   - docker build -t jsheikh/multi-server ./server
   - docker build -t jsheikh/multi-worker ./worker
-  # Log in to docker CLI
+  # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Push images to docker hub
+  # Take those images and push them to docker hub
   - docker push jsheikh/multi-client
   - docker push jsheikh/multi-nginx
   - docker push jsheikh/multi-server
@@ -31,9 +28,9 @@ deploy:
   region: 'eu-central-1'
   app: 'multi-docker'
   env: 'Multi-docker-env'
-  bucket_name: 'elasticbeanstalk-eu-central-1-593185665098'
+  bucket_name: 'elasticbeanstalk-eu-central-1-923445559289'
   bucket_path: 'docker-multi'
   on:
-    branch: master
+    branch: main
   access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: "$AWS_SECRET_KEY"
+  secret_access_key: $AWS_SECRET_KEY
