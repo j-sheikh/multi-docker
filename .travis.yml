@@ -1,0 +1,20 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+#test version
+before_install:
+  - docker build -t jsheikh/react-test -f ./client/Dockerfile.dev ./client
+  #docker build myotherprohects
+#primary test running section
+script:
+  - docker run -e CI=true jsheikh/react-test npm test
+  #docker run myotherprohects
+
+#production version images
+after_success:
+  - docker build -t jsheikh/multi-client ./client
+  - docker build -t jsheikh/multi-nginx ./nginx
+  - docker build -t jsheikh/multi-server ./server
+  - docker build -t jsheikh/multi-worker ./worker
